@@ -1,0 +1,16 @@
+# Frontend has its own separate git repo/remote
+frontend/
+
+# .NET build output
+**/bin/
+**/obj/
+*.user
+*.suo
+.vs/
+
+# Logs
+*.log
+
+# OS
+.DS_Store
+Thumbs.db
