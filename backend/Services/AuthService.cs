@@ -5,6 +5,7 @@ using MyWorkoutApp.Models;
 using MyWorkoutApp.Data;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using System.Security.Cryptography;
 using System.Text;
 
 namespace MyWorkoutApp.Services
@@ -60,18 +61,54 @@ namespace MyWorkoutApp.Services
                 return null;
 
             var token = GenerateJwtToken(user);
+            var refreshToken = await CreateRefreshTokenAsync(user.UserId);
 
             return new AuthResponseDto
             {
-                Token = token
+                Token = token,
+                RefreshToken = refreshToken
             };
         }
 
-        public async Task Logout()
+        public async Task<AuthResponseDto?> Refresh(RefreshRequestDto dto)
         {
-            // Stateless JWT logout is handled on the client.
-            // In a stateful system, we might invalidate a session or refresh token here.
-            await Task.CompletedTask;
+            var hash = HashToken(dto.RefreshToken);
+
+            var existing = await _context.RefreshTokens
+                .Include(rt => rt.User)
+                .FirstOrDefaultAsync(rt => rt.TokenHash == hash);
+
+            if (existing == null || existing.RevokedAt != null || existing.ExpiresAt <= DateTime.UtcNow)
+                return null;
+
+            // Rotation: the presented token is single-use, so revoke it before issuing a new pair.
+            existing.RevokedAt = DateTime.UtcNow;
+
+            var newAccessToken = GenerateJwtToken(existing.User);
+            var newRefreshToken = await CreateRefreshTokenAsync(existing.UserId);
+
+            await _context.SaveChangesAsync();
+
+            return new AuthResponseDto
+            {
+                Token = newAccessToken,
+                RefreshToken = newRefreshToken
+            };
+        }
+
+        public async Task Logout(ClaimsPrincipal principal)
+        {
+            var idClaim = principal.FindFirst(ClaimTypes.NameIdentifier);
+            if (idClaim == null || !int.TryParse(idClaim.Value, out var userId)) return;
+
+            var activeTokens = await _context.RefreshTokens
+                .Where(rt => rt.UserId == userId && rt.RevokedAt == null)
+                .ToListAsync();
+
+            foreach (var t in activeTokens)
+                t.RevokedAt = DateTime.UtcNow;
+
+            await _context.SaveChangesAsync();
         }
 
         public async Task<MeDto?> GetMe(System.Security.Claims.ClaimsPrincipal principal)
@@ -99,15 +136,45 @@ namespace MyWorkoutApp.Services
 
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
+            var accessTokenMinutes = _configuration.GetValue("Jwt:AccessTokenMinutes", 15);
+
             var token = new JwtSecurityToken(
                 issuer: _configuration["Jwt:Issuer"],
                 audience: _configuration["Jwt:Audience"],
                 claims: claims,
-                expires: DateTime.UtcNow.AddHours(1),
+                expires: DateTime.UtcNow.AddMinutes(accessTokenMinutes),
                 signingCredentials: creds
             );
 
             return new JwtSecurityTokenHandler().WriteToken(token);
+        }
+
+        private static string GenerateRawRefreshToken()
+        {
+            var bytes = RandomNumberGenerator.GetBytes(64);
+            return Convert.ToBase64String(bytes);
+        }
+
+        private static string HashToken(string rawToken)
+        {
+            var bytes = SHA256.HashData(Encoding.UTF8.GetBytes(rawToken));
+            return Convert.ToHexString(bytes);
+        }
+
+        private async Task<string> CreateRefreshTokenAsync(int userId)
+        {
+            var raw = GenerateRawRefreshToken();
+            var refreshTokenDays = _configuration.GetValue("Jwt:RefreshTokenDays", 30);
+
+            _context.RefreshTokens.Add(new RefreshToken
+            {
+                UserId = userId,
+                TokenHash = HashToken(raw),
+                ExpiresAt = DateTime.UtcNow.AddDays(refreshTokenDays)
+            });
+            await _context.SaveChangesAsync();
+
+            return raw;
         }
     }
 }

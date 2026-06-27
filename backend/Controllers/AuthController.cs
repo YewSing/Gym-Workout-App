@@ -38,6 +38,17 @@ namespace MyWorkoutApp.Controllers
             return Ok(result);
         }
 
+        [HttpPost("Refresh")]
+        public async Task<ActionResult<AuthResponseDto>> Refresh(RefreshRequestDto dto)
+        {
+            var result = await _authService.Refresh(dto);
+
+            if (result == null)
+                return Unauthorized(new { message = "Invalid or expired refresh token." });
+
+            return Ok(result);
+        }
+
         [Authorize]
         [HttpGet("Me")]
         public async Task<IActionResult> Me()
@@ -51,7 +62,7 @@ namespace MyWorkoutApp.Controllers
         [HttpPost("Logout")]
         public async Task<IActionResult> Logout()
         {
-            await _authService.Logout();
+            await _authService.Logout(User);
             return Ok(new { message = "Logged out successfully" });
         }
     }

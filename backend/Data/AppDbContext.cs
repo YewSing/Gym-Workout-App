@@ -24,6 +24,16 @@ namespace MyWorkoutApp.Data
                 .WithMany(e => e.VariationExercises)
                 .HasForeignKey(ve => ve.ExerciseId)
                 .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<RefreshToken>()
+                .HasIndex(rt => rt.TokenHash)
+                .IsUnique();
+
+            modelBuilder.Entity<RefreshToken>()
+                .HasOne(rt => rt.User)
+                .WithMany()
+                .HasForeignKey(rt => rt.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
         }
 
         public DbSet<User> Users { get; set; }
@@ -35,6 +45,7 @@ namespace MyWorkoutApp.Data
         public DbSet<Set> Sets { get; set; }
         public DbSet<PersonalRecord> PersonalRecords { get; set; }
         public DbSet<VariationExercise> VariationExercises { get; set; }
+        public DbSet<RefreshToken> RefreshTokens { get; set; }
 
     }
 }
