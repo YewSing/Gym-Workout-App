@@ -15,18 +15,33 @@ namespace MyWorkoutApp.Data
                     // Chest
                     new Exercise
                     {
-                        Name = "Bench Press", MuscleGroup = "Chest",
-                        Description = "A compound pushing movement on a flat bench targeting the pectorals, anterior deltoids, and triceps."
+                        Name = "Barbell Bench Press", MuscleGroup = "Chest",
+                        Description = "A compound pushing movement on a flat bench with a barbell, targeting the pectorals, anterior deltoids, and triceps."
                     },
                     new Exercise
                     {
-                        Name = "Incline Bench Press", MuscleGroup = "Chest",
-                        Description = "A pressing movement on an inclined bench (30–45°) that emphasises the upper chest and anterior deltoids."
+                        Name = "Dumbbell Bench Press", MuscleGroup = "Chest",
+                        Description = "A compound pushing movement on a flat bench with dumbbells, allowing a deeper stretch and independent arm path than the barbell version."
                     },
                     new Exercise
                     {
-                        Name = "Decline Bench Press", MuscleGroup = "Chest",
-                        Description = "A pressing movement on a declined bench that places more emphasis on the lower chest."
+                        Name = "Barbell Incline Bench Press", MuscleGroup = "Chest",
+                        Description = "A barbell pressing movement on an inclined bench (30–45°) that emphasises the upper chest and anterior deltoids."
+                    },
+                    new Exercise
+                    {
+                        Name = "Dumbbell Incline Bench Press", MuscleGroup = "Chest",
+                        Description = "A dumbbell pressing movement on an inclined bench (30–45°) that emphasises the upper chest while allowing a greater stretch at the bottom."
+                    },
+                    new Exercise
+                    {
+                        Name = "Barbell Decline Bench Press", MuscleGroup = "Chest",
+                        Description = "A barbell pressing movement on a declined bench that places more emphasis on the lower chest."
+                    },
+                    new Exercise
+                    {
+                        Name = "Dumbbell Decline Bench Press", MuscleGroup = "Chest",
+                        Description = "A dumbbell pressing movement on a declined bench that places more emphasis on the lower chest while allowing an independent arm path."
                     },
                     new Exercise
                     {
@@ -61,8 +76,13 @@ namespace MyWorkoutApp.Data
                     },
                     new Exercise
                     {
-                        Name = "Bent-Over Row", MuscleGroup = "Back",
-                        Description = "A horizontal pulling compound movement with the torso hinged forward, targeting the lats, rhomboids, and rear deltoids."
+                        Name = "Barbell Bent-Over Row", MuscleGroup = "Back",
+                        Description = "A horizontal pulling compound movement with a barbell and the torso hinged forward, targeting the lats, rhomboids, and rear deltoids."
+                    },
+                    new Exercise
+                    {
+                        Name = "Dumbbell Bent-Over Row", MuscleGroup = "Back",
+                        Description = "A horizontal pulling compound movement with dumbbells and the torso hinged forward, allowing a greater range of motion than the barbell version."
                     },
                     new Exercise
                     {
@@ -87,8 +107,13 @@ namespace MyWorkoutApp.Data
                     // Shoulders
                     new Exercise
                     {
-                        Name = "Overhead Press", MuscleGroup = "Shoulders",
-                        Description = "A compound pressing movement overhead targeting the deltoids, upper traps, and triceps."
+                        Name = "Barbell Overhead Press", MuscleGroup = "Shoulders",
+                        Description = "A compound pressing movement with a barbell overhead, targeting the deltoids, upper traps, and triceps."
+                    },
+                    new Exercise
+                    {
+                        Name = "Dumbbell Overhead Press", MuscleGroup = "Shoulders",
+                        Description = "A compound pressing movement with dumbbells overhead, targeting the deltoids, upper traps, and triceps while letting each arm move independently."
                     },
                     new Exercise
                     {
@@ -242,21 +267,26 @@ namespace MyWorkoutApp.Data
                 // ── Block 1b: Add missing exercises and back-fill null descriptions ────
                 var catalog = new Dictionary<string, (string MuscleGroup, string Description)>
                 {
-                    ["Bench Press"]               = ("Chest",     "A compound pushing movement on a flat bench targeting the pectorals, anterior deltoids, and triceps."),
-                    ["Incline Bench Press"]        = ("Chest",     "A pressing movement on an inclined bench (30–45°) that emphasises the upper chest and anterior deltoids."),
-                    ["Decline Bench Press"]        = ("Chest",     "A pressing movement on a declined bench that places more emphasis on the lower chest."),
+                    ["Barbell Bench Press"]        = ("Chest",     "A compound pushing movement on a flat bench with a barbell, targeting the pectorals, anterior deltoids, and triceps."),
+                    ["Dumbbell Bench Press"]       = ("Chest",     "A compound pushing movement on a flat bench with dumbbells, allowing a deeper stretch and independent arm path than the barbell version."),
+                    ["Barbell Incline Bench Press"] = ("Chest",    "A barbell pressing movement on an inclined bench (30–45°) that emphasises the upper chest and anterior deltoids."),
+                    ["Dumbbell Incline Bench Press"] = ("Chest",   "A dumbbell pressing movement on an inclined bench (30–45°) that emphasises the upper chest while allowing a greater stretch at the bottom."),
+                    ["Barbell Decline Bench Press"] = ("Chest",    "A barbell pressing movement on a declined bench that places more emphasis on the lower chest."),
+                    ["Dumbbell Decline Bench Press"] = ("Chest",   "A dumbbell pressing movement on a declined bench that places more emphasis on the lower chest while allowing an independent arm path."),
                     ["Dumbbell Fly"]               = ("Chest",     "An isolation movement using dumbbells in a wide arc to stretch and contract the pectoral muscles."),
                     ["Cable Crossover"]            = ("Chest",     "A cable-based fly that keeps constant tension on the chest throughout the full range of motion."),
                     ["Chest Dip"]                  = ("Chest",     "A bodyweight pushing exercise performed with a forward lean to target the lower chest and triceps."),
                     ["Push-Up"]                    = ("Chest",     "A fundamental bodyweight exercise targeting the chest, shoulders, and triceps by pressing against the floor."),
                     ["Deadlift"]                   = ("Back",      "A foundational compound lift targeting the entire posterior chain: glutes, hamstrings, spinal erectors, and upper back."),
                     ["Pull-Up"]                    = ("Back",      "A bodyweight vertical pulling exercise targeting the latissimus dorsi, biceps, and upper back."),
-                    ["Bent-Over Row"]              = ("Back",      "A horizontal pulling compound movement with the torso hinged forward, targeting the lats, rhomboids, and rear deltoids."),
+                    ["Barbell Bent-Over Row"]      = ("Back",      "A horizontal pulling compound movement with a barbell and the torso hinged forward, targeting the lats, rhomboids, and rear deltoids."),
+                    ["Dumbbell Bent-Over Row"]     = ("Back",      "A horizontal pulling compound movement with dumbbells and the torso hinged forward, allowing a greater range of motion than the barbell version."),
                     ["Lat Pulldown"]               = ("Back",      "A cable machine exercise that mimics the pull-up, targeting the latissimus dorsi and biceps."),
                     ["Seated Cable Row"]           = ("Back",      "A horizontal pulling cable movement targeting the mid-back, rhomboids, and lats."),
                     ["T-Bar Row"]                  = ("Back",      "A compound rowing movement with a barbell loaded on one end, targeting the mid and lower back."),
                     ["Single-Arm Dumbbell Row"]    = ("Back",      "A unilateral rowing exercise targeting the lats and upper back while reducing lower back strain."),
-                    ["Overhead Press"]             = ("Shoulders", "A compound pressing movement overhead targeting the deltoids, upper traps, and triceps."),
+                    ["Barbell Overhead Press"]     = ("Shoulders", "A compound pressing movement with a barbell overhead, targeting the deltoids, upper traps, and triceps."),
+                    ["Dumbbell Overhead Press"]    = ("Shoulders", "A compound pressing movement with dumbbells overhead, targeting the deltoids, upper traps, and triceps while letting each arm move independently."),
                     ["Lateral Raise"]              = ("Shoulders", "An isolation exercise using dumbbells raised to the sides to target the medial (side) deltoid head."),
                     ["Front Raise"]                = ("Shoulders", "An isolation exercise targeting the anterior (front) deltoid by raising weights directly in front of the body."),
                     ["Rear Delt Fly"]              = ("Shoulders", "An isolation exercise targeting the posterior (rear) deltoid, performed bent-over or on a reverse pec-deck."),
@@ -286,6 +316,30 @@ namespace MyWorkoutApp.Data
                     ["Leg Raise"]                  = ("Core",      "A lower-abdominal exercise performed by raising the legs while hanging from a bar or lying flat."),
                     ["Ab Wheel Rollout"]           = ("Core",      "An advanced core exercise using an ab wheel that extends the body forward to challenge the entire anterior core."),
                 };
+
+                // Exercises were split into equipment-specific variants (e.g. "Bench Press" ->
+                // "Barbell Bench Press" + "Dumbbell Bench Press"). Rename the old ambiguous rows in
+                // place rather than adding new ones, so existing PersonalRecord/SessionExercise/
+                // VariationExercise rows keep pointing at the same Exercise.Id and don't lose history.
+                var renames = new Dictionary<string, string>
+                {
+                    ["Bench Press"] = "Barbell Bench Press",
+                    ["Incline Bench Press"] = "Barbell Incline Bench Press",
+                    ["Decline Bench Press"] = "Barbell Decline Bench Press",
+                    ["Overhead Press"] = "Barbell Overhead Press",
+                    ["Bent-Over Row"] = "Barbell Bent-Over Row",
+                };
+                var oldNames = renames.Keys.ToList();
+
+                var toRename = await context.Exercises
+                    .Where(e => oldNames.Contains(e.Name))
+                    .ToListAsync();
+
+                foreach (var exercise in toRename)
+                    exercise.Name = renames[exercise.Name];
+
+                if (toRename.Count > 0)
+                    await context.SaveChangesAsync();
 
                 var existingNames = (await context.Exercises.Select(e => e.Name).ToListAsync()).ToHashSet();
 
@@ -330,8 +384,8 @@ namespace MyWorkoutApp.Data
             context.Users.Add(user);
 
             // Re-query exercises so we reference the persisted entities.
-            var benchPress = await context.Exercises.FirstAsync(e => e.Name == "Bench Press");
-            var ohPress    = await context.Exercises.FirstAsync(e => e.Name == "Overhead Press");
+            var benchPress = await context.Exercises.FirstAsync(e => e.Name == "Dumbbell Bench Press");
+            var ohPress    = await context.Exercises.FirstAsync(e => e.Name == "Barbell Overhead Press");
 
             var pushWorkout = new Workout
             {
