@@ -22,9 +22,9 @@ namespace MyWorkoutApp.Controllers
             var result = await _authService.Register(dto);
 
             if (!result)
-                return BadRequest("User already exists.");
+                return BadRequest(new { message = "User already exists." });
 
-            return Ok("User registered succesfully.");
+            return Ok(new { message = "User registered successfully." });
         }
 
         [HttpPost("Login")]

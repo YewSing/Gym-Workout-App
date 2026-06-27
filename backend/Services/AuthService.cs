@@ -22,14 +22,16 @@ namespace MyWorkoutApp.Services
 
         public async Task<bool> Register(RegisterDto dto)
         {
-            if(await _context.Users.AnyAsync(u => u.Email == dto.Email)) 
+            var email = dto.Email.Trim();
+
+            if(await _context.Users.AnyAsync(u => u.Email == email))
                 return false;
 
             var user = new User
             {
-                Email = dto.Email,
+                Email = email,
                 PasswordHash = BCrypt.Net.BCrypt.HashPassword(dto.Password),
-                UserName = dto.Username
+                UserName = dto.Username.Trim()
             };
 
             try
