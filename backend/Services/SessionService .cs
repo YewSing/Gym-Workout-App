@@ -7,10 +7,12 @@ namespace MyWorkoutApp.Services
     public class SessionService : ISessionService
     {
         private readonly ISessionRepository _repo;
+        private readonly ILogger<SessionService> _logger;
 
-        public SessionService(ISessionRepository repo)
+        public SessionService(ISessionRepository repo, ILogger<SessionService> logger)
         {
             _repo = repo;
+            _logger = logger;
         }
 
         public async Task<int> CreateSessionAsync(CreateSessionDto dto)
@@ -84,6 +86,13 @@ namespace MyWorkoutApp.Services
         {
             var session = await _repo.GetSessionByIdAsync(sessionId);
             if (session == null) return false;
+
+            if (dto.Debug != null)
+            {
+                _logger.LogWarning(
+                    "FinishSession debug: sessionId={SessionId} duration={Duration} startTime={StartTime} clientNow={ClientNow} restoreSource={RestoreSource} restoreDetail={RestoreDetail}",
+                    sessionId, dto.Duration, dto.Debug.StartTime, dto.Debug.ClientNow, dto.Debug.RestoreSource, dto.Debug.RestoreDetail);
+            }
 
             session.Duration = dto.Duration;
 
